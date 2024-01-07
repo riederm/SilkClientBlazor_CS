@@ -18,6 +18,7 @@ public class LoginService
 
     public async Task<string> HashPassword(string username, string password)
     {
+        // perform call to ask for server's salt
         var salt = await ApiClientFactory.CreateClient().LoginSaltAsync(new LoginSaltRequest() { Username = username });
 
         StringBuilder hashBuilder = new StringBuilder();
@@ -25,6 +26,7 @@ public class LoginService
         {
             // Convert the input string to a byte array and compute the hash.
             byte[] data = sha.ComputeHash(Encoding.UTF8.GetBytes(password + salt));
+            // convert byte array to a hex string
             foreach (byte b in data){
                 hashBuilder.AppendFormat("{0:x2}", b);
             }
@@ -37,6 +39,7 @@ public class LoginService
         await ApiClientFactory.CreateClient().LogoutAsync();
         Session.LoggedIn = false;
         Session.User = "";
+        Session.BearerToken = "";
         Session.NotifyLogin();
     }
     

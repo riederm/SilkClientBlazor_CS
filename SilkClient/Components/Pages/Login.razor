@@ -23,16 +23,18 @@
 
 </div>
 <p role="status">@loginModel.Message</p>
-<button class="btn btn-primary" @onclick="LoginUser">Click me</button>
+<button class="btn btn-primary" @onclick="LoginUser">Login</button>
 
-
+// to redirect after the login
 @inject NavigationManager NavManager
+// to store the login state
 @inject LoginSession Session
+// to hash the password
 @inject LoginService LoginService
+// to obtain a generated client to the API
 @inject ApiClientFactory ClientFactory
 
 @code {
-
 
     private LoginModel loginModel = new LoginModel();
 
@@ -40,21 +42,23 @@
     {
         var client = ClientFactory.CreateClient();
 
-        var saltRequest = new LoginSaltRequest();
-        saltRequest.Username = loginModel.Username;
-
         var auth = new LoginParameters()
             {
                 Username = loginModel.Username,
                 PasswordHash = await LoginService.HashPassword(loginModel.Username, loginModel.Password)
             };
 
+        //perform login call
         var loginResult = await client.LoginAsync(auth);
+        
         if (loginResult.Success)
         {
+            // login successful
+            // remember user data in session object
             Session.User = loginModel.Username;
             Session.LoggedIn = true;
             Session.BearerToken = loginResult.Token;
+            //redirect user to assets page
             NavManager.NavigateTo("/assets");
         }
         else

@@ -37,17 +37,17 @@ app.MapGet("/register", ([Microsoft.AspNetCore.Mvc.FromBody]RegisterUserRequest 
     return TypedResults.Ok();
 }).WithName("Register a User").WithOpenApi();
 
-
+// Return  all assets in the assets dictionary
 app.MapGet("/assets", () => {
     return TypedResults.Ok(assets.Values);
 }).WithName("List Assets").WithOpenApi();
 
-
+// Return the details of a single asset
 app.MapGet("/assets/{id}", (string id) => {
-    
     return TypedResults.Ok(assets[id]);
 }).WithName("Get one Asset").WithOpenApi();
 
+// Create a new Asset
 app.MapPost("/assets", (Asset asset) =>
 {
     if (assets.ContainsKey(asset.id))
@@ -58,6 +58,7 @@ app.MapPost("/assets", (Asset asset) =>
     return Results.Ok();
 }).WithName("Create Asset").WithOpenApi();
 
+// Update an existing Asset
 app.MapPut("/assets", (Asset asset) =>
 {
     if (!assets.ContainsKey(asset.id))
@@ -68,6 +69,7 @@ app.MapPut("/assets", (Asset asset) =>
     return Results.Ok(asset);
 }).WithName("Update Asset").WithOpenApi();
 
+// Delete an existing Asset
 app.MapDelete("/assets/{id}", (string id) =>
 {
     if (!assets.ContainsKey(id))

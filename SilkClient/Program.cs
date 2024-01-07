@@ -6,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-
+// Register injectable objects
 builder.Services.AddSingleton<LoginSession>();
 builder.Services.AddSingleton<ApiClientFactory>();
 builder.Services.AddSingleton<LoginService>();

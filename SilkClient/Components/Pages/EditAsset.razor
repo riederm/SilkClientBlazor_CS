@@ -49,6 +49,7 @@ else
 
 @code {
 
+    // This is the parameter we get from the route /assets/{id}
     [Parameter]
     public string id { get; set; }
 
@@ -57,6 +58,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        // fetch the asset we want to edit
         asset = await ClientFactory.CreateClient().Get_one_AssetAsync(id);
         StateHasChanged();
     }

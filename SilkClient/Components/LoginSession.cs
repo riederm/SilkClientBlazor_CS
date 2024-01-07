@@ -11,6 +11,7 @@ public class LoginSession
     public bool LoggedIn { get; set; } = false;
     public string User { get; set; } = "";
 
+    // This is the event that will be called when the login state changes
     public event Action OnChange;
 
     public async Task<string> HashPassword(string username, string password)

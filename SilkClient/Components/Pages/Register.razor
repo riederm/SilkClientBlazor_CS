@@ -11,25 +11,25 @@
 <div Model="@registerModel">
 
     <div class="form-group">
-        <label for="username">Username:</label>
+        <label >Username:</label>
         <InputText class="form-control" @bind-Value="registerModel.Username" />
     </div>
     <div class="form-group">
-        <label for="password">Email</label>
+        <label >Email</label>
         <InputText class="form-control" @bind-Value="registerModel.Email" />
     </div>
 
     <div class="form-group">
-        <label for="password">Password:</label>
+        <label >Password:</label>
         <InputText type="password" class="form-control" @bind-Value="registerModel.Password" />
     </div>
     <div class="form-group">
-        <label for="password">Password again:</label>
+        <label >Password again:</label>
         <InputText type="password" class="form-control" @bind-Value="registerModel.Password2" />
     </div>
 
 </div>
-<button class="btn btn-primary" @onclick="RegisterUser">Click me</button>
+<button class="btn btn-primary" @onclick="RegisterUser">Register</button>
 <p role="status">@registerModel.Message</p>
 
 
@@ -39,8 +39,10 @@
 
 @code {
     private RegisterModel registerModel = new RegisterModel();
+
     private async void RegisterUser()
     {
+        // check if passwords match
         if (registerModel.Password != registerModel.Password2)
         {
             registerModel.Message = "Passwords do not match";
@@ -50,7 +52,7 @@
             return;
         }
 
-        var registerRequ = new RegisterUserRequest()
+        var registerRequest = new RegisterUserRequest()
             {
                 Username = registerModel.Username,
                 Email = registerModel.Email,
@@ -59,7 +61,7 @@
         
         try
         {
-            await ClientFactory.CreateClient().Register_a_UserAsync(registerRequ);
+            await ClientFactory.CreateClient().Register_a_UserAsync(registerRequest);
             NavManager.NavigateTo("/login");
         }
         catch (ApiException e)

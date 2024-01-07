@@ -54,6 +54,7 @@ else
 @code {
     private Asset[]? assets;
 
+    //called after page loads
     protected override async Task OnInitializedAsync()
     {
         var assets = await ClientFactory.CreateClient().List_AssetsAsync();
@@ -61,6 +62,7 @@ else
         {
             this.assets = assets.ToArray();
         }
+        //ask page to re-render
         StateHasChanged();
     }
 
@@ -70,6 +72,7 @@ else
 
     private async void Delete(string id){
         await ClientFactory.CreateClient().Delete_AssetAsync(id);
+        // re-fetch all assets
         await OnInitializedAsync();
     }
 
