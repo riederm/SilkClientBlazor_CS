@@ -5,20 +5,18 @@ using SilkClient.api;
 using System.Text;
 
 namespace SilkClient.Components;
-public class LoginService
+public class LoginSession
 {
+    public string BearerToken { get; set; } = "";
+    public bool LoggedIn { get; set; } = false;
+    public string User { get; set; } = "";
 
-    public LoginService(LoginSession session, ApiClientFactory apiClientFactory){
-        Session = session;
-        ApiClientFactory = apiClientFactory;
-    }
-
-    public LoginSession Session { get; }
-    public ApiClientFactory ApiClientFactory { get; }
+    public event Action OnChange;
 
     public async Task<string> HashPassword(string username, string password)
     {
-        var salt = await ApiClientFactory.CreateClient().LoginSaltAsync(new LoginSaltRequest() { Username = username });
+        var client = new SilkApiClient("http://localhost:5293", new HttpClient());
+        var salt = await client.LoginSaltAsync(new LoginSaltRequest() { Username = username });
 
         StringBuilder hashBuilder = new StringBuilder();
         using (SHA256 sha = SHA256.Create())
@@ -34,10 +32,16 @@ public class LoginService
 
     public async Task Logout()
     {
-        await ApiClientFactory.CreateClient().LogoutAsync();
-        Session.LoggedIn = false;
-        Session.User = "";
-        Session.NotifyLogin();
+        var client = new SilkApiClient("http://localhost:5293", new HttpClient());
+        await client.LogoutAsync();
+        LoggedIn = false;
+        User = "";
+        NotifyLogin();
+    }
+
+
+    public void NotifyLogin() {
+        OnChange?.Invoke();
     }
     
 }

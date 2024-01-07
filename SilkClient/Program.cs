@@ -7,6 +7,8 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 
+builder.Services.AddSingleton<LoginSession>();
+builder.Services.AddSingleton<ApiClientFactory>();
 builder.Services.AddSingleton<LoginService>();
 
 var app = builder.Build();
